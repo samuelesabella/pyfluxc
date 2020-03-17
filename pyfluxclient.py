@@ -20,8 +20,24 @@ FLUX_TYPE_MAP = {
 class FluxResponse():
     def __init__(self, res, query, groupby=True):
         self.query = query
-        csv_data = self.parse_csv(res)
-        # TODO: handle empty queries and errors!
+        csv_data = self.http_response2csv(res)
+        # Handle errors ----- #
+        if csv_data==[[]]:
+            self.dframe = None
+            return
+
+        flux_error = self.check_error(csv_data)
+        if flux_error: 
+            raise ValueError(flux_error)
+
+        self.dframe = self.parse_csv(csv_data, groupby)
+
+    def check_error(self, csv_data): 
+        if 'error' in csv_data[0]:
+            return csv_data[1][0]
+        return None
+
+    def parse_csv(self, csv_data, groupby):
         keys = csv_data[3][3:]
         dtypes = csv_data[0][3:]
         # Parsing results
@@ -33,15 +49,14 @@ class FluxResponse():
         dframe = pd.DataFrame(table, columns=keys)
         # Casting types ..... #
         for (k, dtype) in zip(keys, dtypes):
-            dframe[k] = self.castFluxSeries(dframe[k], dtype)
+            dframe[k] = self.castFluxSeries(dframe[k].copy(deep=True), dtype)
         # Grouping ..... #
         if groupby:
             groups = csv_data[1][3:]
             group_keys = ([k for (i, k) in enumerate(keys) if groups[i] == 'true'])
             if len(group_keys) > 0:
                 dframe = dframe.groupby(group_keys)
-
-        self.dframe = dframe
+        return dframe
 
     @staticmethod
     def rfc33392datatime(s):
@@ -60,7 +75,7 @@ class FluxResponse():
         return pd_series
 
     @staticmethod
-    def parse_csv(res):
+    def http_response2csv(res):
         restrs = res.content.decode('utf-8')
         csv_data = csv.reader(restrs.splitlines())
         csv_data = list(csv_data)
@@ -166,7 +181,7 @@ class FluxClient():
 
     def __call__(self, q, grouby=True):
         self.preq.data = str(q)
-        res = self.session.send(self.preq.prepare())
+        res = self.session.send(self.preq.prepare()) 
 
         return FluxResponse(res, q, grouby)
 
