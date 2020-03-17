@@ -174,13 +174,13 @@ class FluxClient():
         q = FluxQueryFrom(bucket).range(trange)
         q.filter(f'(r) => r._measurement == "{from_measurement}"')
         q.keep(["_field"]).keys().keep(["_field"])
-        return self(q)
+        return self(q, False)
 
     def show_tag_values(self, bucket, from_measurement, with_key, trange='-48h'):
         q = FluxQueryFrom(bucket).range(trange)
         q.filter(f'(r) => r._measurement == "{from_measurement}"')
         q.group([with_key]).distinct(with_key)
-        return self(q)
+        return self(q, False)
 
     def bucket_timerange(self, bucket):
         # Returns the oldest and the newest value in the bucket
@@ -194,4 +194,4 @@ class FluxClient():
         q = FluxQueryFrom(bucket)
         q.range(trange).group(["_measurement"])
         q.distinct("_measurement").keep(["_value"])
-        return self(q)
+        return self(q, False)
