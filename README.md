@@ -1,4 +1,8 @@
+
 # pyFluxClient
+[![PyPI version](https://badge.fury.io/py/pyfluxc.svg)](https://badge.fury.io/py/pyfluxc)
+
+## Usage
 Client initialization
 ```
 >>> import pyfluxclient as flux
