@@ -51,7 +51,6 @@ class FluxResponse():
         dframe = pd.DataFrame(table, columns=keys)
         # Casting types ..... #
         for (k, dtype) in zip(keys, dtypes):
-            import pdb; pdb.set_trace() 
             dframe.loc[:, k] = self.castFluxSeries(dframe[k], dtype)
         # Grouping ..... #
         if groupby:
