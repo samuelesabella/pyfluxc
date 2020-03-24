@@ -33,6 +33,8 @@ class FluxResponse():
         self.dframe = self.parse_csv(csv_data, groupby)
 
     def check_error(self, csv_data): 
+        if len(csv_data[0])==1:
+            return csv_data[0]
         if 'error' in csv_data[0]:
             return csv_data[1][0]
         return None
