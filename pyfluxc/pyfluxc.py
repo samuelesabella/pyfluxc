@@ -33,7 +33,7 @@ class FluxResponse():
         self.dframe = self.parse_csv(csv_data, groupby)
 
     def check_error(self, csv_data): 
-        if len(csv_data[0])==1:
+        if len(csv_data)==1:
             return csv_data[0]
         if 'error' in csv_data[0]:
             return csv_data[1][0]
@@ -51,7 +51,8 @@ class FluxResponse():
         dframe = pd.DataFrame(table, columns=keys)
         # Casting types ..... #
         for (k, dtype) in zip(keys, dtypes):
-            dframe.loc[k] = self.castFluxSeries(dframe[k], dtype)
+            import pdb; pdb.set_trace() 
+            dframe.loc[:, k] = self.castFluxSeries(dframe[k], dtype)
         # Grouping ..... #
         if groupby:
             groups = csv_data[1][3:]
