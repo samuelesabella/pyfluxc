@@ -51,7 +51,7 @@ class FluxResponse():
         dframe = pd.DataFrame(table, columns=keys)
         # Casting types ..... #
         for (k, dtype) in zip(keys, dtypes):
-            dframe.loc[:, k] = self.castFluxSeries(dframe[k], dtype)
+            dframe.loc[:, k] = self.castFluxSeries(dframe[k].copy(), dtype)
         # Grouping ..... #
         if groupby:
             groups = csv_data[1][3:]
