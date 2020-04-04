@@ -201,6 +201,7 @@ class FluxClient():
 
     def bucket_timerange(self, bucket):
         # Returns the oldest and the newest value in the bucket
+        # TODO: extremely inneffiecient, change now
         qfirst = FluxQueryFrom(bucket).range('1970-01-01T00:00:00Z').first() 
         qlast = FluxQueryFrom(bucket).range('1970-01-01T00:00:00Z').last()
         fs = self(qfirst, False).dframe.iloc[0]["_time"]
