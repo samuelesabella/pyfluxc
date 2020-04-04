@@ -1,3 +1,4 @@
+**Note:** This is an experimental project I'm developing for my graduation thesis. It's not ready to be used yet.
 
 # pyFluxClient
 [![PyPI version](https://badge.fury.io/py/pyfluxc.svg)](https://badge.fury.io/py/pyfluxc)
